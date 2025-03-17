@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y reprepro dpkg-dev dpkg-sig curl jq gnupg
+          sudo apt-get install -y reprepro dpkg-dev curl jq gnupg
 
       - name: Determine latest uv version
         id: get-version
