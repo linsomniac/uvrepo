@@ -36,8 +36,8 @@ jobs:
           #GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          gpg --list-keys
           KEY_ID=$(gpg --list-keys --with-colons | awk -F: '/^pub/{print $5}')
+          echo "Trusting key..."
           echo -e "5\ny\n" | gpg --command-fd 0 --edit-key "$KEY_ID" trust
 
       - name: Download latest uv binary
