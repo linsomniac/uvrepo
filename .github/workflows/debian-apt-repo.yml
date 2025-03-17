@@ -9,7 +9,7 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     env:
-      DISTRIBUTION: focal
+      DISTRIBUTION: nobel
       COMPONENT: main
       ARCHITECTURE: amd64
 
