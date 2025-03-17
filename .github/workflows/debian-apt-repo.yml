@@ -1,0 +1,86 @@
+name: Build & Publish Debian Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      DISTRIBUTION: focal
+      COMPONENT: main
+      ARCHITECTURE: amd64
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y reprepro dpkg-dev dpkg-sig curl jq gnupg
+
+    - name: Determine latest uv version
+      id: get-version
+      run: |
+        TAG=$(curl -s https://api.github.com/repos/your-org/uv/releases/latest | jq -r '.tag_name')
+        VERSION=${TAG#v}
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Import GPG key
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      run: |
+        echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+        KEY_ID=$(gpg --list-keys --with-colons | awk -F: '/^pub/{print $5}')
+        echo -e "5\ny\n" | gpg --command-fd 0 --edit-key "$KEY_ID" trust
+
+    - name: Download latest uv binary
+      run: |
+        DOWNLOAD_URL=$(curl -s https://api.github.com/repos/your-org/uv/releases/latest | jq -r '.assets[] | select(.name|test("linux.*amd64")) | .browser_download_url')
+        curl -L "$DOWNLOAD_URL" -o uv
+        chmod +x uv
+
+    - name: Build Debian package
+      run: |
+        PKG_VERSION="${{ steps.get-version.outputs.version }}-1"
+        PKG="uv_${PKG_VERSION}_${ARCHITECTURE}.deb"
+        mkdir -p pkg/DEBIAN pkg/usr/local/bin
+        cat > pkg/DEBIAN/control <<EOF
+Package: uv
+Version: ${PKG_VERSION}
+Section: utils
+Priority: optional
+Architecture: ${ARCHITECTURE}
+Maintainer: GitHub Actions <actions@github.com>
+Description: UV CLI binary
+EOF
+        mv uv pkg/usr/local/bin/uv
+        dpkg-deb --build pkg "$PKG"
+
+    - name: Sign Debian package
+      run: dpkg-sig --sign builder uv_*.deb
+
+    - name: Create APT repository with reprepro
+      run: |
+        mkdir -p repo/conf
+        cat > repo/conf/distributions <<EOF
+Origin: GitHub
+Label: GitHub UV
+Suite: stable
+Codename: ${DISTRIBUTION}
+Components: ${COMPONENT}
+Architectures: ${ARCHITECTURE}
+SignWith: yes
+EOF
+        reprepro -Vb repo includedeb ${DISTRIBUTION} "uv_${{ steps.get-version.outputs.version }}-1_${ARCHITECTURE}.deb"
+
+    - name: Deploy APT repository to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./repo
+
