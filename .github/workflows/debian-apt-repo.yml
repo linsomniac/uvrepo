@@ -49,15 +49,13 @@ jobs:
         PKG_VERSION="${{ steps.get-version.outputs.version }}-1"
         PKG="uv_${PKG_VERSION}_${ARCHITECTURE}.deb"
         mkdir -p pkg/DEBIAN pkg/usr/local/bin
-        cat > pkg/DEBIAN/control <<EOF
-Package: uv
-Version: ${PKG_VERSION}
-Section: utils
-Priority: optional
-Architecture: ${ARCHITECTURE}
-Maintainer: GitHub Actions <actions@github.com>
-Description: UV CLI binary
-EOF
+        echo "Package: uv" >pkg/DEBIAN/control
+        echo "Version: ${PKG_VERSION}" >>pkg/DEBIAN/control
+        echo "Section: utils" >>pkg/DEBIAN/control
+        echo "Priority: optional" >>pkg/DEBIAN/control
+        echo "Architecture: ${ARCHITECTURE}" >>pkg/DEBIAN/control
+        echo "Maintainer: GitHub Actions <actions@github.com>" >>pkg/DEBIAN/control
+        echo "Description: UV CLI binary" >>pkg/DEBIAN/control
         mv uv pkg/usr/local/bin/uv
         dpkg-deb --build pkg "$PKG"
 
