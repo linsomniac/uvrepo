@@ -62,7 +62,7 @@ jobs:
       - name: Sign Debian package
         run: |
           chmod 755 sign-package
-          ./sign-package.sh "" "$KEY_FINGERPRINT" uv*.deb
+          ./sign-package "" "$KEY_FINGERPRINT" uv*.deb
           #debsigs -v --gpgopts="--batch --no-tty --pinentry-mode=loopback" --sign=origin --default-key="$KEY_FINGERPRINT" uv*.deb
 
       - name: Create APT repository with reprepro
