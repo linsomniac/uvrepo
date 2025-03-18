@@ -62,7 +62,7 @@ jobs:
           dpkg-deb --build pkg "$PKG"
 
       - name: Sign Debian package
-        run: debsign --sign=origin -m jafo00+uvrepo@gmail.com uv*.deb
+        run: debsign -m jafo00+uvrepo@gmail.com uv*.deb
         #run: dpkg-sig --sign builder uv_*.deb
 
       - name: Create APT repository with reprepro
