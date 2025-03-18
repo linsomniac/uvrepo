@@ -1,20 +1,203 @@
-<p />
-UV apt repo
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UV Package Repository</title>
+  <style>
+    :root {
+      --primary-color: #6200ea;
+      --secondary-color: #3700b3;
+      --text-color: #333333;
+      --background-color: #f9f9f9;
+      --card-background: #ffffff;
+      --code-background: #f0f0f0;
+    }
 
-<p />
-To use:
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--background-color);
+      margin: 0;
+      padding: 0;
+    }
 
-<pre>
-sudo wget -O /usr/share/keyrings/uvrepo.gpg https://linsomniac.github.io/uvrepo/pubkey.gpg
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 1rem;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    .subtitle {
+      color: var(--secondary-color);
+      font-weight: normal;
+      margin-top: 0.5rem;
+    }
+
+    .card {
+      background-color: var(--card-background);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      color: var(--primary-color);
+      margin-top: 0;
+      border-bottom: 2px solid var(--code-background);
+      padding-bottom: 0.5rem;
+    }
+
+    pre {
+      background-color: var(--code-background);
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .copy-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      transition: background-color 0.2s;
+    }
+
+    .copy-button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .info-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .info-icon {
+      flex-shrink: 0;
+      color: var(--primary-color);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <svg class="logo" width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 7V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V7C3 4 4.5 2 8 2H16C19.5 2 21 4 21 7Z" stroke="#6200EA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14.5 4.5V6.5C14.5 7.6 15.4 8.5 16.5 8.5H18.5" stroke="#6200EA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8 13H12" stroke="#6200EA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8 17H16" stroke="#6200EA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h1>UV Repository</h1>
+      <p class="subtitle">Fast package installation with the UV package manager</p>
+    </header>
+
+    <div class="card">
+      <h2>Installation Instructions</h2>
+      <button class="copy-button" id="copyButton">Copy Commands</button>
+      <pre id="installCommands">sudo wget -O /usr/share/keyrings/uvrepo.gpg https://linsomniac.github.io/uvrepo/pubkey.gpg
 sudo chmod 644 /usr/share/keyrings/uvrepo.gpg
 echo "deb [signed-by=/usr/share/keyrings/uvrepo.gpg] https://linsomniac.github.io/uvrepo any main" | sudo tee /etc/apt/sources.list.d/uvrepo.list
 apt update
-apt install uv
-</pre>
+apt install uv</pre>
+    </div>
 
-<p />
-See
-<a href="https://github.com/linsomniac/uvrepo"
-  >the linsomniac/uvrepo github repository</a
->
-for more information.
+    <div class="info-section">
+      <svg class="info-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="#6200EA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 8V13" stroke="#6200EA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M11.995 16H12.005" stroke="#6200EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p>
+        For more information, visit
+        <a href="https://github.com/linsomniac/uvrepo" class="github-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.475 2 2 6.475 2 12C2 16.425 4.8625 20.1625 8.8375 21.4875C9.3375 21.575 9.525 21.275 9.525 21.0125C9.525 20.775 9.5125 19.9875 9.5125 19.15C7 19.6125 6.35 18.5375 6.15 17.975C6.0375 17.6875 5.55 16.8 5.125 16.5625C4.775 16.375 4.275 15.9125 5.1125 15.9C5.9 15.8875 6.4625 16.625 6.65 16.925C7.55 18.4375 8.9875 18.0125 9.5625 17.75C9.65 17.1 9.9125 16.6625 10.2 16.4125C7.975 16.1625 5.65 15.3 5.65 11.475C5.65 10.3875 6.0375 9.4875 6.675 8.7875C6.575 8.5375 6.225 7.5125 6.775 6.1375C6.775 6.1375 7.6125 5.875 9.525 7.1625C10.325 6.9375 11.175 6.825 12.025 6.825C12.875 6.825 13.725 6.9375 14.525 7.1625C16.4375 5.8625 17.275 6.1375 17.275 6.1375C17.825 7.5125 17.475 8.5375 17.375 8.7875C18.0125 9.4875 18.4 10.375 18.4 11.475C18.4 15.3125 16.0625 16.1625 13.8375 16.4125C14.2 16.725 14.5125 17.325 14.5125 18.2625C14.5125 19.6 14.5 20.675 14.5 21.0125C14.5 21.275 14.6875 21.5875 15.1875 21.4875C19.1375 20.1625 22 16.4125 22 12C22 6.475 17.525 2 12 2Z" fill="#6200EA"/>
+          </svg>
+          the linsomniac/uvrepo GitHub repository
+        </a>
+      </p>
+    </div>
+
+    <footer>
+      &copy; 2025 UV Repository
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('copyButton').addEventListener('click', function() {
+      const text = document.getElementById('installCommands').textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        const button = document.getElementById('copyButton');
+        button.textContent = 'Copied!';
+        setTimeout(function() {
+          button.textContent = 'Copy Commands';
+        }, 2000);
+      }).catch(function(err) {
+        console.error('Could not copy text: ', err);
+      });
+    });
+  </script>
+</body>
+</html>
