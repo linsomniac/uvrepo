@@ -61,7 +61,7 @@ jobs:
 
       - name: Sign Debian package
         run: |
-          debsigs -v --gpgopts="--batch --no-tty --pinentry-mode=loopback" --sign=origin --default-key="$KEY_FINGERPRINT" loopback" uv*.deb
+          debsigs -v --gpgopts="--batch --no-tty --pinentry-mode=loopback" --sign=origin --default-key="$KEY_FINGERPRINT" uv*.deb
 
       - name: Create APT repository with reprepro
         run: |
