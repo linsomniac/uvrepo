@@ -40,14 +40,15 @@ jobs:
       - name: Download latest uv binary
         run: |
           DOWNLOAD_URL=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.assets[] | select(.name | contains("x86_64-unknown-linux-gnu")) | select(.name | endswith(".tar.gz")) | .browser_download_url')
-          curl -L "$DOWNLOAD_URL" -o uv
-          chmod +x uv
+          curl -L "$DOWNLOAD_URL" -o uv.tar.gz
+          mkdir dl
+          tar xf uv.tar.gz -C dl
 
       - name: Build Debian package
         run: |
           PKG_VERSION="${{ steps.get-version.outputs.version }}-1"
           PKG="uv_${PKG_VERSION}_${ARCHITECTURE}.deb"
-          mkdir -p pkg/DEBIAN pkg/usr/local/bin
+          mkdir -p pkg/DEBIAN pkg/usr/bin
           echo "Package: uv" >pkg/DEBIAN/control
           echo "Version: ${PKG_VERSION}" >>pkg/DEBIAN/control
           echo "Section: utils" >>pkg/DEBIAN/control
@@ -55,7 +56,7 @@ jobs:
           echo "Architecture: ${ARCHITECTURE}" >>pkg/DEBIAN/control
           echo "Maintainer: GitHub Actions <actions@github.com>" >>pkg/DEBIAN/control
           echo "Description: UV CLI binary" >>pkg/DEBIAN/control
-          mv uv pkg/usr/local/bin/uv
+          install -o root -g root -m 755 dl/*/uv* pkg/usr/bin
           dpkg-deb --build pkg "$PKG"
 
       - name: Sign Debian package
