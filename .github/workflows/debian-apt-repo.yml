@@ -13,6 +13,7 @@ jobs:
       DISTRIBUTION: nobel
       COMPONENT: main
       ARCHITECTURE: amd64
+      RELEASE: 2
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       KEY_ID: ${{ vars.KEY_ID }}
 
@@ -46,7 +47,7 @@ jobs:
 
       - name: Build Debian package
         run: |
-          PKG_VERSION="${{ steps.get-version.outputs.version }}-1"
+          PKG_VERSION="${{ steps.get-version.outputs.version }}-$RELEASE"
           PKG="uv_${PKG_VERSION}_${ARCHITECTURE}.deb"
           mkdir -p pkg/DEBIAN pkg/usr/bin
           echo "Package: uv" >pkg/DEBIAN/control
@@ -72,7 +73,7 @@ jobs:
           echo "Components: ${COMPONENT}" >>repo/conf/distributions
           echo "Architectures: ${ARCHITECTURE}" >>repo/conf/distributions
           echo "SignWith: $KEY_ID" >>repo/conf/distributions
-          reprepro -Vb repo includedeb ${DISTRIBUTION} "uv_${{ steps.get-version.outputs.version }}-1_${ARCHITECTURE}.deb"
+          reprepro -Vb repo includedeb ${DISTRIBUTION} "uv_${{ steps.get-version.outputs.version }}-${RELEASE}_${ARCHITECTURE}.deb"
           cp uvrepo-public.gpg repo/pubkey.gpg
 
       - name: Deploy APT repository to GitHub Pages
