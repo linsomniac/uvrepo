@@ -35,7 +35,6 @@ jobs:
       - name: Import GPG key
         run: |
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          echo "Trusting key: $KEY_ID:6:"
           echo "$KEY_ID:6:" |  gpg --batch --import-ownertrust --pinentry-mode=loopback
 
       - name: Download latest uv binary
