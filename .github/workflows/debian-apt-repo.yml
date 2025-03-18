@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y reprepro dpkg-dev curl jq gnupg debsigs devscripts
+          sudo apt-get install -y reprepro dpkg-dev curl jq gnupg debsigs devscripts pinentry-curses
 
       - name: Determine latest uv version
         id: get-version
@@ -60,7 +60,11 @@ jobs:
           dpkg-deb --build pkg "$PKG"
 
       - name: Sign Debian package
-        run: debsigs --sign=origin --default-key="$KEY_FINGERPRINT" --gpg-options="--pinentry-mode loopback" uv*.deb
+        run: |
+          export GPG_TTY=$(tty)
+          gpgconf --kill gpg-agent
+          gpg-agent --daemon
+          debsigs --sign=origin --default-key="$KEY_FINGERPRINT" loopback" uv*.deb
 
       - name: Create APT repository with reprepro
         run: |
