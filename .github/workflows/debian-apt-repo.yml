@@ -59,11 +59,9 @@ jobs:
           mv uv pkg/usr/local/bin/uv
           dpkg-deb --build pkg "$PKG"
 
-      #- name: Sign Debian package
-      #  run: |
-      #  chmod 755 sign-package
-      #  ./sign-package "" "$KEY_ID" uv*.deb
-      #  #debsigs -v --gpgopts="--batch --no-tty --pinentry-mode=loopback" --sign=origin --default-key="$KEY_ID" uv*.deb
+      - name: Sign Debian package
+        run: |
+          debsigs -v --gpgopts="--batch --no-tty --pinentry-mode=loopback" --sign=origin --default-key="$KEY_ID" uv*.deb
 
       - name: Create APT repository with reprepro
         run: |
@@ -80,5 +78,5 @@ jobs:
       - name: Deploy APT repository to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.REPO_TOKEN }}
           publish_dir: ./repo
