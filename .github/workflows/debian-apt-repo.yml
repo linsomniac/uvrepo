@@ -82,4 +82,3 @@ jobs:
           github_token: ${{ secrets.REPO_TOKEN }}
           #github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./repo
-          destination_dir: uvrepo
