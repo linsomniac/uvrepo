@@ -1,15 +1,41 @@
-Generate key:
+# uv Apt Repository
+
+This package builds an apt repo of the latest "uv" package for
+x64 Linux and publishes it to a GitHub Pages.
+
+To use:
 
 ```
-rm -rf /tmp/s5 ; mkdir /tmp/s5 ; chmod 700 /tmp/s5
-echo "batch" >/tmp/s5/gpg.conf
-echo "pinentry-mode loopback" >>/tmp/s5/gpg.conf
-gpg --full-generate-key --homedir /tmp/s5 --passphrase ''
-gpg --list-keys --with-keygrip --homedir /tmp/s5
-gpg --homedir /tmp/s5 --armor --export-secret-keys jafo00+uvrepo@gmail.com >uvrepo-private.gpg
-gpg --homedir /tmp/s5 --armor --export jafo00+uvrepo@gmail.com >uvrepo-public.asc
-gpg --homedir /tmp/s5 --export jafo00+uvrepo@gmail.com >uvrepo-public.gpg
+sudo wget -O /usr/share/keyrings/uvrepo.gpg https://linsomniac.github.io/uvrepo/pubkey.gpg
+sudo chmod 644 /usr/share/keyrings/uvrepo.gpg
+echo "deb [signed-by=/usr/share/keyrings/uvrepo.gpg] https://linsomniac.github.io/uvrepo any main" | sudo tee /etc/apt/sources.list.d/uvrepo.list
+apt update
+apt install uv
 ```
+
+Note, this is a simple package, it simply takes the uv download
+tar file of the binaries, and makes a simple deb package containing
+the `uv` and `uvx` binaries.
+
+## For Deploying
+
+To deploy your own repo to github pages, you will need to generate
+a new key:
+
+```
+rm -rf /tmp/uvrepo-key ; mkdir /tmp/uvrepo-key ; chmod 700 /tmp/uvrepo-key
+echo "batch" >/tmp/uvrepo-key/gpg.conf
+echo "pinentry-mode loopback" >>/tmp/uvrepo-key/gpg.conf
+gpg --full-generate-key --homedir /tmp/uvrepo-key --passphrase ''
+gpg --list-keys --with-keygrip --homedir /tmp/uvrepo-key
+gpg --homedir /tmp/uvrepo-key --armor --export-secret-keys [EMAIL_ADDR] >uvrepo-private.asc
+gpg --homedir /tmp/uvrepo-key --armor --export [EMAIL_ADDR] >uvrepo-public.asc
+gpg --homedir /tmp/uvrepo-key --export [EMAIL_ADDR] >uvrepo-public.gpg
+```
+
+The private keyfile `uvrepo-private.asc` needs to be added to your
+github project as a secret environment variable called "GPG_PRIVATE_KEY".
+You also need to add the key id as a non-secret variable "KEY_ID".
 
 Use uvrepo-public.gpg for the line in apt sources:
 

@@ -10,10 +10,10 @@ jobs:
     environment: Main
     runs-on: ubuntu-latest
     env:
-      DISTRIBUTION: nobel
+      DISTRIBUTION: any
       COMPONENT: main
       ARCHITECTURE: amd64
-      RELEASE: 2
+      RELEASE: 1
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       KEY_ID: ${{ vars.KEY_ID }}
 
