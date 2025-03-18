@@ -26,7 +26,7 @@ jobs:
       - name: Determine latest uv version
         id: get-version
         run: |
-          TAG=$(curl -s https://api.github.com/repos/your-org/uv/releases/latest | jq -r '.tag_name')
+          TAG=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.tag_name')
           VERSION=${TAG#v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
