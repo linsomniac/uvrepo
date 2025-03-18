@@ -1,0 +1,9 @@
+#!/usr/bin/expect -f
+set password [lindex $argv 0]
+set key_fingerprint [lindex $argv 1]
+set package [lindex $argv 2]
+
+spawn debsigs --sign=origin --default-key=$key_fingerprint $package
+expect "Enter passphrase:"
+send "$password\r"
+expect eof
