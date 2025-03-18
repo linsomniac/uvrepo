@@ -42,7 +42,7 @@ jobs:
 
       - name: Download latest uv binary
         run: |
-          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/your-org/uv/releases/latest | jq -r '.assets[] | select(.name|test("linux.*amd64")) | .browser_download_url')
+          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.assets[] | select(.name | contains("x86_64-unknown-linux-gnu")) | select(.name | endswith(".tar.gz")) | .browser_download_url')
           curl -L "$DOWNLOAD_URL" -o uv
           chmod +x uv
 
