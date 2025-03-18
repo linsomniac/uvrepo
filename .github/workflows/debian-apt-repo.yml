@@ -61,11 +61,7 @@ jobs:
 
       - name: Sign Debian package
         run: |
-          export GPG_TTY=$(tty)
-          gpgconf --kill gpg-agent
-          pkill -f gpg-agent || true
-          gpg-agent --daemon
-          debsigs --sign=origin --default-key="$KEY_FINGERPRINT" loopback" uv*.deb
+          debsigs -v --gpgopts="--batch --no-tty --pinentry-mode=loopback" --sign=origin --default-key="$KEY_FINGERPRINT" loopback" uv*.deb
 
       - name: Create APT repository with reprepro
         run: |
