@@ -1,6 +1,8 @@
 name: Build & Publish Debian Package
 
 on:
+  schedule:
+    - cron: "54 7 * * *"
   push:
     branches:
       - main
