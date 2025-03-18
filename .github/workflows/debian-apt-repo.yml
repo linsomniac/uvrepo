@@ -77,6 +77,7 @@ jobs:
           echo "SignWith: $KEY_ID" >>repo/conf/distributions
           reprepro -Vb repo includedeb ${DISTRIBUTION} "uv_${{ steps.get-version.outputs.version }}-${RELEASE}_${ARCHITECTURE}.deb"
           cp uvrepo-public.gpg repo/pubkey.gpg
+          cp index.html repo/
 
       - name: Deploy APT repository to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

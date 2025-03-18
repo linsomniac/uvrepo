@@ -1,0 +1,20 @@
+<p />
+UV apt repo
+
+<p />
+To use:
+
+<pre>
+sudo wget -O /usr/share/keyrings/uvrepo.gpg https://linsomniac.github.io/uvrepo/pubkey.gpg
+sudo chmod 644 /usr/share/keyrings/uvrepo.gpg
+echo "deb [signed-by=/usr/share/keyrings/uvrepo.gpg] https://linsomniac.github.io/uvrepo any main" | sudo tee /etc/apt/sources.list.d/uvrepo.list
+apt update
+apt install uv
+</pre>
+
+<p />
+See
+<a href="https://github.com/linsomniac/uvrepo"
+  >the linsomniac/uvrepo github repository</a
+>
+for more information.
