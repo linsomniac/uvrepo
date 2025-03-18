@@ -61,7 +61,7 @@ jobs:
           dpkg-deb --build pkg "$PKG"
 
       - name: Sign Debian package
-        run: debsigs --sign=origin -k "$KEY_FINGERPRINT" uv*.deb
+        run: debsigs --sign=origin --default-key="$KEY_FINGERPRINT" uv*.deb
 
       - name: Create APT repository with reprepro
         run: |
