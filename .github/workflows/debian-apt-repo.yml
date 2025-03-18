@@ -21,9 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y reprepro dpkg-dev curl jq gnupg
-          sudo apt search dpkg-sig
-          sudo apt install -y dpkg-sig
+          sudo apt-get install -y reprepro dpkg-dev curl jq gnupg debsigs devscripts
 
       - name: Determine latest uv version
         id: get-version
@@ -64,7 +62,8 @@ jobs:
           dpkg-deb --build pkg "$PKG"
 
       - name: Sign Debian package
-        run: dpkg-sig --sign builder uv_*.deb
+        run: debsig --sign=origin -m jafo00+uvrepo@gmail.com uv*.deb
+        #run: dpkg-sig --sign builder uv_*.deb
 
       - name: Create APT repository with reprepro
         run: |
