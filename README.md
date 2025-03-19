@@ -22,15 +22,14 @@ the `uv` and `uvx` binaries.
 To deploy your own repo to github pages, you will need to generate
 a new key:
 
-```
-rm -rf /tmp/uvrepo-key ; mkdir /tmp/uvrepo-key ; chmod 700 /tmp/uvrepo-key
-echo "batch" >/tmp/uvrepo-key/gpg.conf
-echo "pinentry-mode loopback" >>/tmp/uvrepo-key/gpg.conf
-gpg --full-generate-key --homedir /tmp/uvrepo-key --passphrase ''
-gpg --list-keys --with-keygrip --homedir /tmp/uvrepo-key
-gpg --homedir /tmp/uvrepo-key --armor --export-secret-keys [EMAIL_ADDR] >uvrepo-private.asc
-gpg --homedir /tmp/uvrepo-key --armor --export [EMAIL_ADDR] >uvrepo-public.asc
-gpg --homedir /tmp/uvrepo-key --export [EMAIL_ADDR] >uvrepo-public.gpg
+```bash
+rm -rf repo-key ; mkdir repo-key ; chmod 700 repo-key
+echo "batch" >repo-key/gpg.conf
+echo "pinentry-mode loopback" >>repo-key/gpg.conf
+gpg --full-generate-key --homedir repo-key --passphrase ''
+gpg --list-keys --with-keygrip --homedir repo-key
+gpg --homedir repo-key --armor --export-secret-keys [EMAIL_ADDR] >private.asc
+gpg --homedir repo-key --export [EMAIL_ADDR] >public.gpg
 ```
 
 The private keyfile `uvrepo-private.asc` needs to be added to your
