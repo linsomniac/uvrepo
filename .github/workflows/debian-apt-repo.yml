@@ -9,6 +9,9 @@ on:
 
 jobs:
   build-and-publish:
+    permissions:
+      pages: write
+      contents: write
     environment: Main
     runs-on: ubuntu-latest
     env:
