@@ -116,8 +116,9 @@ jobs:
       - name: Download all deb packages
         uses: actions/download-artifact@v4
         with:
-          name: deb-packages
+          name: deb-package-*
           path: ./packages
+          merge-multiple: true
 
       - name: Create repository
         run: |
