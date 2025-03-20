@@ -85,7 +85,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: deb-packages
+          name: deb-package-${{ matrix.arch }}
           path: "*.deb"
 
   publish-repo:
