@@ -74,6 +74,9 @@ jobs:
           Maintainer: GitHub Actions <actions@github.com>
           Description: An extremely fast Python package and project manager.
           EOF
+          cat pkg/DEBIAN/control
+          echo "Version: ${{ steps.uv_version.outputs.version }}-${RELEASE}"
+          cat $GITHUB_OUTPUT
 
           mkdir -p pkg/usr/bin
           fakeroot bash -c "install -o root -g root -m 755 dl/*/uv* pkg/usr/bin ; dpkg-deb --build pkg $PKG_NAME"
