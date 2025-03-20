@@ -127,6 +127,7 @@ jobs:
 
           cat <<EOF > repo/conf/distributions
           Origin: GitHub
+          Label: GitHub UV
           Suite: stable
           Codename: $DISTRIBUTION
           Components: $COMPONENT
