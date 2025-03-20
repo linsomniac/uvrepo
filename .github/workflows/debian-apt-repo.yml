@@ -130,7 +130,7 @@ jobs:
           Suite: stable
           Codename: $DISTRIBUTION
           Components: $COMPONENT
-          Architectures: amd64 s390x arm64
+          Architectures: amd64 s390x arm64 i386
           SignWith: $KEY_ID
           EOF
 
