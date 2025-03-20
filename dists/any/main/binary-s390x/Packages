@@ -1,0 +1,13 @@
+Package: uv
+Version: 0.6.8-1
+Architecture: s390x
+Maintainer: GitHub Actions <actions@github.com>
+Priority: optional
+Section: utils
+Filename: pool/main/u/uv/uv_0.6.8-1_s390x.deb
+Size: 14447516
+SHA256: 9392626d148d93598263143810ffba90ad147a06651197b4432749ba0a5e4c08
+SHA1: 668fd0c575cd245f05a18ae5e98567af94e563fc
+MD5sum: 95c58d6cf2a7a0ae76e6d47d7d7252fc
+Description: An extremely fast Python package and project manager.
+

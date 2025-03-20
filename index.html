@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>UV Apt Repo</title>
+    <style>
+      /* Basic reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      /* Body styling */
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      /* Main container */
+      .container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        max-width: 1000px;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      /* Logo image */
+      .logo {
+        display: block;
+        margin: 0 auto 20px;
+        width: 64px;
+        height: 64px;
+      }
+      /* Heading styles */
+      h1 {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
+      h2 {
+        font-size: 1.2em;
+        margin: 20px 0 10px;
+      }
+      /* Paragraph styling */
+      p {
+        margin: 10px 0;
+        line-height: 1.5;
+        text-align: center;
+      }
+      /* Code container styling */
+      .code-container {
+        position: relative;
+      }
+      /* Preformatted block styling */
+      pre {
+        background: #272822;
+        color: #f8f8f2;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        font-family: Consolas, monospace;
+        font-size: 0.9em;
+        margin-bottom: 20px;
+        white-space: pre-wrap;
+      }
+      /* Copy button styling */
+      .copy-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #007acc;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 0.8em;
+      }
+      .copy-button:active {
+        background: #005fa3;
+      }
+      /* Link styling */
+      a {
+        color: #007acc;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      /* Footer styling */
+      .footer {
+        text-align: center;
+        font-size: 0.8em;
+        color: #777;
+        margin-top: 20px;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("UV Apt Repo page loaded");
+
+        const copyButton = document.getElementById("copyButton");
+        copyButton.addEventListener("click", function () {
+          const codeText = document.getElementById("codeBlock").innerText;
+          navigator.clipboard.writeText(codeText).then(
+            function () {
+              copyButton.textContent = "Copied!";
+              setTimeout(() => {
+                copyButton.textContent = "Copy";
+              }, 2000);
+            },
+            function (err) {
+              console.error("Error copying text: ", err);
+            }
+          );
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Inline SVG logo encoded as base64 -->
+      <img
+        class="logo"
+        src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMwMDdhZmYiLz48dGV4dCB4PSIyMiIgeT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjIwIiBmaWxsPSIjZmZmIj5VViA8L3RleHQ+PC9zdmc+"
+        alt="UV Logo"
+      />
+
+      <h1>UV Apt Repo</h1>
+      <p>The apt repository for the UV package</p>
+
+      <h2>To use:</h2>
+      <div class="code-container">
+        <button id="copyButton" class="copy-button">Copy</button>
+        <pre id="codeBlock">
+sudo wget -O /usr/share/keyrings/uvrepo.gpg https://linsomniac.github.io/uvrepo/pubkey.gpg
+sudo chmod 644 /usr/share/keyrings/uvrepo.gpg
+echo "deb [signed-by=/usr/share/keyrings/uvrepo.gpg] https://linsomniac.github.io/uvrepo any main" \
+  | sudo tee /etc/apt/sources.list.d/uvrepo.list
+apt update
+apt install uv
+      </pre
+        >
+      </div>
+
+      <p>
+        See
+        <a href="https://github.com/linsomniac/uvrepo"
+          >the linsomniac/uvrepo GitHub repository</a
+        >
+        for more information.
+      </p>
+    </div>
+  </body>
+</html>

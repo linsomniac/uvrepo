@@ -1,0 +1,7 @@
+Origin: GitHub
+Label: GitHub UV
+Suite: stable
+Codename: any
+Components: main
+Architectures: amd64 s390x arm64 i386
+SignWith: 33C00E389586D9E2C5839DFF9201C07A0A9CE31C
