@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    environment: Main
 
     strategy:
       matrix:
@@ -24,7 +25,7 @@ jobs:
             arch: "arm64"
 
     env:
-      DISTRIBUTION: stable
+      DISTRIBUTION: any
       COMPONENT: main
       RELEASE: 1
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -37,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y reprepro debsigs jq
+          sudo apt-get install -y reprepro dpkg-dev curl gnupg jq debsigs
 
       - name: Import GPG key
         run: |
@@ -45,7 +46,7 @@ jobs:
           echo "$KEY_ID:6:" | gpg --import-ownertrust
 
       - name: Get latest UV version
-        id: uv_version
+        id: get-version
         run: |
           TAG=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.tag_name')
           VERSION=${TAG#v}
@@ -61,10 +62,10 @@ jobs:
 
       - name: Build Debian package
         run: |
-          PKG_NAME="uv_${{ steps.uv_version.outputs.version }}_${{ matrix.arch }}.deb"
           mkdir -p pkg/usr/bin
-          cp dl/uv pkg/usr/bin/
+          fakeroot bash -c "install -o root -g root -m 755 dl/*/uv* pkg/usr/bin ; dpkg-deb --build pkg $PKG_NAME"
 
+          PKG_NAME="uv_${{ steps.uv_version.outputs.version }}_${{ matrix.arch }}.deb"
           mkdir -p pkg/DEBIAN
           cat <<EOF > pkg/DEBIAN/control
           Package: uv
@@ -72,11 +73,9 @@ jobs:
           Section: utils
           Priority: optional
           Architecture: ${{ matrix.target }}
-          Maintainer: Your Name <youremail@example.com>
-          Description: UV tool
+          Maintainer: GitHub Actions <actions@github.com>
+          Description: An extremely fast Python package and project manager.
           EOF
-
-          fakeroot dpkg-deb --build pkg "$PKG"
 
       - name: Sign Debian package
         run: |
