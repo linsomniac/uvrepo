@@ -10,8 +10,6 @@ on:
 jobs:
   build-packages:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     environment: Main
 
     strategy:
@@ -93,6 +91,7 @@ jobs:
     permissions:
       contents: write
     needs: build-packages
+    environment: Main
 
     env:
       DISTRIBUTION: stable
