@@ -46,7 +46,7 @@ jobs:
           echo "$KEY_ID:6:" | gpg --import-ownertrust
 
       - name: Get latest UV version
-        id: get-version
+        id: uv_version
         run: |
           TAG=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.tag_name')
           VERSION=${TAG#v}
@@ -74,9 +74,6 @@ jobs:
           Maintainer: GitHub Actions <actions@github.com>
           Description: An extremely fast Python package and project manager.
           EOF
-          cat pkg/DEBIAN/control
-          echo "Version: ${{ steps.uv_version.outputs.version }}-${RELEASE}"
-          cat $GITHUB_OUTPUT
 
           mkdir -p pkg/usr/bin
           fakeroot bash -c "install -o root -g root -m 755 dl/*/uv* pkg/usr/bin ; dpkg-deb --build pkg $PKG_NAME"
