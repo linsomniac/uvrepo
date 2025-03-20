@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-packages:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -86,10 +86,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: deb-packages
-          path: '*.deb'
+          path: "*.deb"
 
-
-	publish-repo:
+  publish-repo:
     runs-on: ubuntu-latest
     permissions:
       contents: write
