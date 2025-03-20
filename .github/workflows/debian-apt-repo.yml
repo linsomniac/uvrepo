@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  build-and-publish:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y reprepro dpkg-dev curl gnupg jq debsigs
+          sudo apt-get install -y reprepro dpkg-dev curl jq gnupg debsigs
 
       - name: Import GPG key
         run: |
@@ -62,10 +62,8 @@ jobs:
 
       - name: Build Debian package
         run: |
-          mkdir -p pkg/usr/bin
-          fakeroot bash -c "install -o root -g root -m 755 dl/*/uv* pkg/usr/bin ; dpkg-deb --build pkg $PKG_NAME"
-
           PKG_NAME="uv_${{ steps.uv_version.outputs.version }}_${{ matrix.arch }}.deb"
+
           mkdir -p pkg/DEBIAN
           cat <<EOF > pkg/DEBIAN/control
           Package: uv
@@ -77,11 +75,53 @@ jobs:
           Description: An extremely fast Python package and project manager.
           EOF
 
+          mkdir -p pkg/usr/bin
+          fakeroot bash -c "install -o root -g root -m 755 dl/*/uv* pkg/usr/bin ; dpkg-deb --build pkg $PKG_NAME"
+
       - name: Sign Debian package
         run: |
           debsigs --sign=origin --default-key="$KEY_ID" uv*.deb
 
-      - name: Create or update repository
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-packages
+          path: '*.deb'
+
+
+	publish-repo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: build-packages
+
+    env:
+      DISTRIBUTION: stable
+      COMPONENT: main
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      KEY_ID: ${{ vars.KEY_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y reprepro
+
+      - name: Import GPG key
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "$KEY_ID:6:" | gpg --import-ownertrust
+
+      - name: Download all deb packages
+        uses: actions/download-artifact@v4
+        with:
+          name: deb-packages
+          path: ./packages
+
+      - name: Create repository
         run: |
           mkdir -p repo/conf
           cat <<EOF > repo/conf/distributions
@@ -89,11 +129,11 @@ jobs:
           Suite: stable
           Codename: $DISTRIBUTION
           Components: $COMPONENT
-          Architectures: amd64 s390 arm64
+          Architectures: amd64 s390x arm64
           SignWith: $KEY_ID
           EOF
 
-          reprepro -b repo includedeb $DISTRIBUTION uv*.deb
+          reprepro -b repo includedeb $DISTRIBUTION packages/*.deb
 
       - name: Deploy APT repository to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
