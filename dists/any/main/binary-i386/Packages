@@ -6,8 +6,8 @@ Priority: optional
 Section: utils
 Filename: pool/main/u/uv/uv_0.6.8-1_i386.deb
 Size: 11803414
-SHA256: d21835068f2da63a7f7cf93d2b922a62d9d11d067158b95238204e58e0d87166
-SHA1: b66c8dc3da3e5b402b3256ce1effd0a776591a53
-MD5sum: 4ea2d8ee91a82f3f63cb0b467c350f4d
+SHA256: 0a08e139f9c2b34473d300e23c4145da1c3c14a7fe790e4509148fe4175edd80
+SHA1: a445c1feff3ab37ba8effa79dca2ddb0c93fbf3d
+MD5sum: 2a114bcfa72e7c65fcd7f6b673910f17
 Description: An extremely fast Python package and project manager.
 
