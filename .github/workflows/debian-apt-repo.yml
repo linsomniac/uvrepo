@@ -125,6 +125,8 @@ jobs:
       - name: Create repository
         run: |
           mkdir -p repo/conf
+          cp index.html repo/
+
           cat <<EOF > repo/conf/distributions
           Origin: GitHub
           Suite: stable
