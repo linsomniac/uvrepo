@@ -1,4 +1,4 @@
-name: Build & Publish Debian Package
+name: Build & Publish Debian Packages
 
 on:
   schedule:
@@ -9,15 +9,23 @@ on:
 
 jobs:
   build-and-publish:
-    permissions:
-      pages: write
-      contents: write
-    environment: Main
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    strategy:
+      matrix:
+        include:
+          - target: "x86_64-unknown-linux-gnu"
+            arch: "amd64"
+          - target: "s390x-unknown-linux-gnu"
+            arch: "s390x"
+          - target: "aarch64-unknown-linux-gnu"
+            arch: "arm64"
+
     env:
-      DISTRIBUTION: any
+      DISTRIBUTION: stable
       COMPONENT: main
-      ARCHITECTURE: amd64
       RELEASE: 1
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       KEY_ID: ${{ vars.KEY_ID }}
@@ -29,58 +37,64 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y reprepro dpkg-dev curl jq gnupg debsigs
+          sudo apt-get install -y reprepro debsigs jq
 
-      - name: Determine latest uv version
-        id: get-version
+      - name: Import GPG key
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "$KEY_ID:6:" | gpg --import-ownertrust
+
+      - name: Get latest UV version
+        id: uv_version
         run: |
           TAG=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.tag_name')
           VERSION=${TAG#v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Import GPG key
+      - name: Download and extract UV binary
         run: |
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          echo "$KEY_ID:6:" |  gpg --batch --import-ownertrust --pinentry-mode=loopback
-
-      - name: Download latest uv binary
-        run: |
-          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | jq -r '.assets[] | select(.name | contains("x86_64-unknown-linux-gnu")) | select(.name | endswith(".tar.gz")) | .browser_download_url')
+          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest |
+            jq -r '.assets[] | select(.name | contains("${{ matrix.target }}") and endswith(".tar.gz")) | .browser_download_url')
           curl -L "$DOWNLOAD_URL" -o uv.tar.gz
           mkdir dl
           tar xf uv.tar.gz -C dl
 
       - name: Build Debian package
         run: |
-          PKG_VERSION="${{ steps.get-version.outputs.version }}-$RELEASE"
-          PKG="uv_${PKG_VERSION}_${ARCHITECTURE}.deb"
-          mkdir -p pkg/DEBIAN pkg/usr/bin
-          echo "Package: uv" >pkg/DEBIAN/control
-          echo "Version: ${PKG_VERSION}" >>pkg/DEBIAN/control
-          echo "Section: utils" >>pkg/DEBIAN/control
-          echo "Priority: optional" >>pkg/DEBIAN/control
-          echo "Architecture: ${ARCHITECTURE}" >>pkg/DEBIAN/control
-          echo "Maintainer: GitHub Actions <actions@github.com>" >>pkg/DEBIAN/control
-          echo "Description: UV CLI binary" >>pkg/DEBIAN/control
-          fakeroot bash -c "install -o root -g root -m 755 dl/*/uv* pkg/usr/bin ; dpkg-deb --build pkg $PKG"
+          PKG_NAME="uv_${{ steps.uv_version.outputs.version }}_${{ matrix.arch }}.deb"
+          mkdir -p pkg/usr/bin
+          cp dl/uv pkg/usr/bin/
+
+          mkdir -p pkg/DEBIAN
+          cat <<EOF > pkg/DEBIAN/control
+          Package: uv
+          Version: ${{ steps.uv_version.outputs.version }}-${RELEASE}
+          Section: utils
+          Priority: optional
+          Architecture: ${{ matrix.target }}
+          Maintainer: Your Name <youremail@example.com>
+          Description: UV tool
+          EOF
+
+          fakeroot dpkg-deb --build pkg "$PKG"
 
       - name: Sign Debian package
         run: |
-          debsigs -v --gpgopts="--batch --no-tty --pinentry-mode=loopback" --sign=origin --default-key="$KEY_ID" uv*.deb
+          debsigs --sign=origin --default-key="$KEY_ID" uv*.deb
 
-      - name: Create APT repository with reprepro
+      - name: Create or update repository
         run: |
           mkdir -p repo/conf
-          echo "Origin: GitHub" >repo/conf/distributions
-          echo "Label: GitHub UV" >>repo/conf/distributions
-          echo "Suite: stable" >>repo/conf/distributions
-          echo "Codename: ${DISTRIBUTION}" >>repo/conf/distributions
-          echo "Components: ${COMPONENT}" >>repo/conf/distributions
-          echo "Architectures: ${ARCHITECTURE}" >>repo/conf/distributions
-          echo "SignWith: $KEY_ID" >>repo/conf/distributions
-          reprepro -Vb repo includedeb ${DISTRIBUTION} "uv_${{ steps.get-version.outputs.version }}-${RELEASE}_${ARCHITECTURE}.deb"
-          cp uvrepo-public.gpg repo/pubkey.gpg
-          cp index.html repo/
+          cat <<EOF > repo/conf/distributions
+          Origin: GitHub
+          Suite: stable
+          Codename: $DISTRIBUTION
+          Components: $COMPONENT
+          Architectures: amd64 s390 arm64
+          SignWith: $KEY_ID
+          EOF
+
+          reprepro -b repo includedeb $DISTRIBUTION uv*.deb
 
       - name: Deploy APT repository to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
