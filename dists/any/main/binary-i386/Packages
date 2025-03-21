@@ -1,13 +1,13 @@
 Package: uv
-Version: 0.6.8-1
+Version: 0.6.9-1
 Architecture: i386
 Maintainer: GitHub Actions <actions@github.com>
 Priority: optional
 Section: utils
-Filename: pool/main/u/uv/uv_0.6.8-1_i386.deb
-Size: 11803414
-SHA256: 0a08e139f9c2b34473d300e23c4145da1c3c14a7fe790e4509148fe4175edd80
-SHA1: a445c1feff3ab37ba8effa79dca2ddb0c93fbf3d
-MD5sum: 2a114bcfa72e7c65fcd7f6b673910f17
+Filename: pool/main/u/uv/uv_0.6.9-1_i386.deb
+Size: 11820644
+SHA256: 90ea5c1897e6e22d8f5aa9b9c2a68afd039b90b82363cf800c20099fb939fe67
+SHA1: ac5f884e689d25d68079c26d43cd8ee15fa31ecf
+MD5sum: 6e9ac036b316c349a2c56933039cbb53
 Description: An extremely fast Python package and project manager.
 
