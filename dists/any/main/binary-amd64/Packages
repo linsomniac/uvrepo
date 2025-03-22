@@ -5,9 +5,9 @@ Maintainer: GitHub Actions <actions@github.com>
 Priority: optional
 Section: utils
 Filename: pool/main/u/uv/uv_0.6.9-1_amd64.deb
-Size: 11894930
-SHA256: b8c2da159c7627ef86a253b28cecc4fe83864773ceb3f7cb915c138caaed782b
-SHA1: aee5905f2bf4167cdd6b7326c06ea8d19cbc3368
-MD5sum: 33f97750641612f6f1291fb381056e0f
+Size: 11894934
+SHA256: 4e6737a90500637f2e8c0f8b7956c4513878dc19a223e47c12a6e7c261eb5a6a
+SHA1: 9710b9345b59d2ab2b64f08c21a20d92aee3193c
+MD5sum: b541418d07b41739295d4d083e0c96ae
 Description: An extremely fast Python package and project manager.
 

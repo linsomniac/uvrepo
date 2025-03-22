@@ -5,9 +5,9 @@ Maintainer: GitHub Actions <actions@github.com>
 Priority: optional
 Section: utils
 Filename: pool/main/u/uv/uv_0.6.9-1_i386.deb
-Size: 11820644
-SHA256: 90ea5c1897e6e22d8f5aa9b9c2a68afd039b90b82363cf800c20099fb939fe67
-SHA1: ac5f884e689d25d68079c26d43cd8ee15fa31ecf
-MD5sum: 6e9ac036b316c349a2c56933039cbb53
+Size: 11820648
+SHA256: 0c99823aa8ab8b39949b66a4bc61ccf29728f09ccd4a67b7c93a8b283da99cc5
+SHA1: e46d8232bc1a0c88261b7af837cdfd46e80ae71f
+MD5sum: 63a59207796d0fc150d583e470866a36
 Description: An extremely fast Python package and project manager.
 
